@@ -1,0 +1,31 @@
+version: 2
+
+models:
+  - name: stg_activity_events
+    columns:
+      - name: event_id
+        data_tests: [unique, not_null]
+      - name: activity_type
+        data_tests:
+          - accepted_values:
+              arguments:
+                values: [view, export]
+      - name: user_key
+        data_tests: [not_null]
+  - name: stg_accounts
+    columns:
+      - name: user_key
+        data_tests: [unique, not_null]
+  - name: stg_reports
+    columns:
+      - name: report_id
+        data_tests: [unique, not_null]
+  - name: stg_reviews
+    columns:
+      - name: review_id
+        data_tests: [unique, not_null]
+      - name: stars
+        data_tests:
+          - accepted_values:
+              arguments:
+                values: [1, 2, 3, 4, 5]

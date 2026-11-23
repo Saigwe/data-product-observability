@@ -1,0 +1,48 @@
+// DAX equivalents of the gold-mart definitions, for a Power BI model over the same tables.
+// Tables: Activity (fct_report_activity), Report (dim_report), Account (dim_account), Checks (rpt_freshness_checks),
+// Reviews (fct_reviews), Date. Member accounts only unless named otherwise.
+
+Member Views =
+CALCULATE ( COUNTROWS ( Activity ), Activity[activity_type] = "view", Activity[is_service] = FALSE () )
+
+All Views (v1) = CALCULATE ( COUNTROWS ( Activity ), Activity[activity_type] = "view" )
+
+// Distinct at whatever grain the visual has. Never SUMX this over reports or weeks.
+Distinct Viewers =
+CALCULATE (
+    DISTINCTCOUNT ( Activity[user_key] ),
+    Activity[activity_type] = "view",
+    Activity[is_service] = FALSE ()
+)
+
+Repeat Viewers =
+VAR ThisWeek =
+    CALCULATETABLE ( VALUES ( Activity[user_key] ), Activity[activity_type] = "view", Activity[is_service] = FALSE () )
+VAR LastWeek =
+    CALCULATETABLE (
+        VALUES ( Activity[user_key] ),
+        Activity[activity_type] = "view",
+        Activity[is_service] = FALSE (),
+        DATEADD ( 'Date'[Date], -7, DAY )
+    )
+RETURN COUNTROWS ( INTERSECT ( ThisWeek, LastWeek ) )
+
+Report Coverage =
+DIVIDE (
+    CALCULATE ( DISTINCTCOUNT ( Activity[report_key] ), Activity[is_service] = FALSE (), Report[is_live] = TRUE () ),
+    CALCULATE ( COUNTROWS ( Report ), Report[is_live] = TRUE () )
+)
+
+// Suppress small groups in any breakdown by department.
+Distinct Viewers (Safe) = IF ( [Distinct Viewers] < 5, BLANK (), [Distinct Viewers] )
+
+SLA Compliance = DIVIDE ( CALCULATE ( COUNTROWS ( Checks ), Checks[is_fresh] = TRUE () ), COUNTROWS ( Checks ) )
+Missed Checks = CALCULATE ( COUNTROWS ( Checks ), Checks[is_fresh] = FALSE () )
+
+Review Count = COUNTROWS ( Reviews )
+Average Stars = AVERAGE ( Reviews[stars] )
+
+// Always place next to Review Count; blank below five reviews so a card never shows a rating on one review.
+Average Stars (Shown) = IF ( [Review Count] < 5, BLANK (), [Average Stars] )
+
+Low Star Share = DIVIDE ( CALCULATE ( [Review Count], Reviews[stars] <= 2 ), [Review Count] )

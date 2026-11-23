@@ -1,0 +1,8 @@
+metric_id,metric_name,version,definition,unit,excludes,effective_from,status,owner
+report_views,Report views,1,Count of view events on a report,events,,2025-01-01,retired,Data platform
+report_views,Report views,2,Count of view events on a report by member accounts,events,service accounts,2026-07-01,current,Data platform
+active_viewers,Distinct active viewers,1,Distinct member accounts with at least one view in the period; never summed across reports or periods,accounts,service accounts,2025-01-01,current,Data platform
+repeat_viewers,Weekly repeat viewers,1,Member accounts that viewed the report in the week and in the week before,accounts,service accounts,2025-01-01,current,Data platform
+report_coverage,Report coverage,1,Share of live catalogued reports with at least one member view in the period,reports,deleted reports,2025-01-01,current,Data platform
+freshness_sla,Freshness SLA compliance,1,Share of scheduled checks at which the dataset held data through the end of the previous day,checks,,2025-01-01,current,Data platform
+average_rating,Average star rating,1,Mean stars over reviews in the period; always reported with the review count,stars,,2025-01-01,current,Consumer insights

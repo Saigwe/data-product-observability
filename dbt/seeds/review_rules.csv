@@ -1,0 +1,9 @@
+rule_id,category,pattern,priority
+RR-01,pairing,pair|bluetooth|disconnect,1
+RR-02,crash,crash,2
+RR-03,login,log in|login|account,3
+RR-04,firmware,firmware,4
+RR-05,battery,battery,5
+RR-06,ui,layout|menu|confusing,6
+RR-07,sound,sound|bass|\beq\b,7
+RR-08,praise,love it|perfect|exactly what|five stars|no complaints,8

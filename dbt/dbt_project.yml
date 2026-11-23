@@ -1,0 +1,37 @@
+name: data_observability
+version: 1.0.0
+config-version: 2
+profile: data_observability
+
+model-paths: ["models"]
+macro-paths: ["macros"]
+test-paths: ["tests"]
+seed-paths: ["seeds"]
+target-path: target
+clean-targets: ["target", "dbt_packages"]
+
+vars:
+  # Demo assumptions. Change one and rerun `make dbt` to see its consequence.
+  as_of: "2026-11-23 08:00:00"
+  pii_salt: "demo-salt-not-a-secret"   # in production this comes from a secret store; here it only shows the pattern
+  min_group_size: 5                    # department breakdowns with fewer distinct viewers are suppressed
+  recon_tolerance: 0.01                # API and SFTP sell-through may differ by 1% before a cell is an exception
+  rating_prior_weight: 20              # reviews of prior weight when shrinking a weekly rating to the product's mean
+  actionable_min_reviews: 30           # fewer reviews than this in the period: a weak signal, not an incident
+  rating_drop_threshold: 0.4           # stars below the baseline before a change is considered
+  weak_signal_shrunk_drop: 0.25        # a thin week still this far below baseline after shrinking is a weak signal; less is noise
+
+models:
+  data_observability:
+    staging:
+      +schema: silver
+      +materialized: table
+    intermediate:
+      +schema: silver
+      +materialized: table
+    marts:
+      +schema: gold
+      +materialized: table
+seeds:
+  data_observability:
+    +schema: silver

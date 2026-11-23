@@ -1,0 +1,124 @@
+# Source contracts: what each feed must deliver. tests/test_contracts.py checks every raw file against this.
+# Types: string, date, timestamp, int, float. Grain: columns unique together. allowed: permitted values by schema version.
+activity_events:
+  owner: BI platform activity API (daily extract, three-day lookback)
+  grain: [extract_id, event_id]
+  columns:
+    extract_id: string
+    schema_version: int
+    event_id: string
+    event_time: timestamp
+    ingested_at: timestamp
+    user_upn: string
+    report_id: string
+    report_name: string
+    workspace: string
+    activity: string
+    consumption_method: string
+  allowed:
+    activity:
+      "1": [ViewReport, ExportReport]
+      "2": [ReportViewed, ReportExported]
+  personal_data: [user_upn]   # hashed in staging; must never reach gold
+activity_extracts:
+  owner: Data platform
+  grain: [extract_id]
+  columns:
+    extract_id: string
+    extracted_at: timestamp
+    window_start: timestamp
+    window_end: timestamp
+    schema_version: int
+directory:
+  owner: Identity team (attributes only, no names)
+  grain: [user_upn]
+  columns:
+    user_upn: string
+    department: string
+    region: string
+    account_type: string
+  personal_data: [user_upn]
+reports:
+  owner: BI platform catalogue
+  grain: [report_id]
+  columns:
+    report_id: string
+    report_name: string
+    tier: string
+    dataset_id: string
+    owner_team: string
+    created_on: string
+    deleted_on: string
+report_lineage:
+  grain: [old_report_id]
+  columns:
+    old_report_id: string
+    new_report_id: string
+    effective_on: string
+    reason: string
+report_names:
+  grain: [report_id, valid_from]
+  columns:
+    report_id: string
+    report_name: string
+    valid_from: string
+    valid_to: string
+datasets:
+  grain: [dataset_id]
+  columns:
+    dataset_id: string
+    dataset_name: string
+    cadence: string
+    due_hour_utc: int
+pipeline_runs:
+  owner: Orchestrator
+  grain: [run_id]
+  columns:
+    run_id: string
+    dataset_id: string
+    started_at: timestamp
+    finished_at: timestamp
+    status: string
+    rows_loaded: int
+    source_watermark: timestamp
+sellthrough_api:
+  owner: Retailer API connector
+  grain: [sales_date, retailer_id]
+  columns:
+    sales_date: date
+    retailer_id: string
+    units: int
+    received_at: timestamp
+sellthrough_sftp:
+  owner: Retailer file transfer
+  grain: [sales_date, retailer_id]
+  columns:
+    sales_date: date
+    retailer_id: string
+    units: int
+    file_name: string
+sftp_arrivals:
+  grain: [retailer_id, sales_date]
+  columns:
+    retailer_id: string
+    sales_date: date
+    file_name: string
+    due_at: timestamp
+    arrived_at: timestamp
+reviews:
+  owner: Review scraper
+  grain: [review_id]
+  columns:
+    review_id: string
+    source: string
+    app_id: string
+    listing_name: string
+    market: string
+    platform: string
+    app_version: string
+    posted_at: timestamp
+    scraped_at: timestamp
+    stars: int
+    review_text: string
+    reviewer_handle: string
+  personal_data: [reviewer_handle]

@@ -1,0 +1,23 @@
+version: 2
+
+sources:
+  - name: raw
+    description: Parquet files written by generator/simulate.py, as each source delivers them. Every number is synthetic.
+    meta:
+      external_location: "{{ env_var('RAW_DIR', '../data/raw') }}/{name}.parquet"
+    tables:
+      - name: activity_events
+        description: One row per event per API extract; extracts overlap, so an event can appear several times.
+      - name: activity_extracts
+      - name: directory
+        description: Accounts. Contains user principal names, which never leave staging.
+      - name: reports
+      - name: report_lineage
+      - name: report_names
+      - name: datasets
+      - name: pipeline_runs
+      - name: sellthrough_api
+      - name: sellthrough_sftp
+      - name: sftp_arrivals
+      - name: reviews
+        description: Scraped reviews. reviewer_handle is dropped in staging.

@@ -1,0 +1,9 @@
+product_id,brand,product_name,product_type,comparable_group
+APP-CONNECT,Brightwater,Brightwater Connect app,App,App
+P-ARC-MINI,Brightwater,Arc Speaker Mini,Speaker,Speaker
+P-ARC,Brightwater,Arc Speaker,Speaker,Speaker
+P-PULSE-HP,Brightwater,Pulse Headphones,Headphones,Headphones
+P-PULSE-EB,Brightwater,Pulse Earbuds,Earbuds,Earbuds
+C-SOLO-EB,Competitor,Solo Earbuds,Earbuds,Earbuds
+C-WAVE-SPK,Competitor,Wave Speaker,Speaker,Speaker
+C-HALO-HP,Competitor,Halo Headphones,Headphones,Headphones

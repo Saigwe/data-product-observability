@@ -1,0 +1,56 @@
+version: 2
+
+models:
+  - name: fct_report_activity
+    columns:
+      - name: event_id
+        data_tests: [unique, not_null]
+      - name: report_key
+        data_tests:
+          - relationships:
+              arguments:
+                to: ref('dim_report')
+                field: report_key
+  - name: rpt_adoption_weekly
+    data_tests:
+      - unique_combination:
+          arguments:
+            columns: [report_key, week_start]
+  - name: rpt_adoption_28d
+    columns:
+      - name: report_key
+        data_tests: [unique]
+  - name: rpt_freshness_checks
+    data_tests:
+      - unique_combination:
+          arguments:
+            columns: [dataset_id, check_date]
+  - name: rpt_report_health
+    data_tests:
+      - unique_combination:
+          arguments:
+            columns: [report_id, check_date]
+  - name: rpt_sellthrough_recon
+    data_tests:
+      - unique_combination:
+          arguments:
+            columns: [retailer_id, sales_date]
+    columns:
+      - name: status
+        data_tests:
+          - accepted_values:
+              arguments:
+                values: [match, mismatch, missing_sftp, missing_api]
+  - name: fct_reviews
+    columns:
+      - name: review_id
+        data_tests: [unique, not_null]
+      - name: category
+        data_tests: [not_null]
+  - name: rpt_ratings_weekly
+    columns:
+      - name: signal
+        data_tests:
+          - accepted_values:
+              arguments:
+                values: ['no baseline', 'no change', 'actionable', 'weak signal', 'noise']
